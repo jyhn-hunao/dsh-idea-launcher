@@ -19,3 +19,6 @@ Thumbs.db
 
 # 记忆系统内部数据（不随仓库发布）
 .mnemon/
+
+# npm pack 产物
+*.tgz

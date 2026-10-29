@@ -1,0 +1,11 @@
+# dsh-idea-launcher bundle patch
+#
+# 1. 本文件是 package.json 里 dsh.bundle.patch 指向的挂载层：
+#    通过 plugin_manager install_bundle（绝对包目录）安装后，
+#    profile 启动时会合并这个 patch，插入下面这一行 Host 插件。
+# 2. id 是 profile 内的唯一行标识（不是包名）；name 才是包名。
+# 3. 若同一 profile 已手写过同名包的手工挂载行，先删掉手工行再走 bundle 通道，
+#    否则会双挂载（两套 Host 半 + 两套槽位注册）。
+- insert:
+    - id: idea-launcher
+      name: 'dsh-idea-launcher'

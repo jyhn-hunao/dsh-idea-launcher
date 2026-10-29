@@ -1,0 +1,23 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Demo Web" type="js.build_tools.npm" factoryName="npm">
+    <package-json value="$PROJECT_DIR$/web/package.json" />
+    <command value="run" />
+    <scripts>
+      <script value="dev" />
+    </scripts>
+    <envs>
+      <env name="VITE_PORT" value="5173" />
+    </envs>
+    <method v="2">
+      <option name="Make" enabled="true" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Demo API" run_configuration_type="SpringBootApplicationConfigurationType" />
+      <option name="LaunchBrowser.Before.Run" enabled="true" url="http://localhost:5173" browser="chrome" withDebugger="false" />
+    </method>
+  </configuration>
+  <configuration default="false" name="Demo API" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="SPRING_BOOT_MAIN_CLASS" value="demo.ApiApplication" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

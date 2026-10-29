@@ -1,0 +1,21 @@
+# 依赖与构建产物：lib/ 需要随仓库提交（插件按目录安装，见 README「安装」）
+node_modules/
+.pnpm-store/
+
+# 本地环境与运行期垃圾
+.dsh-graph/
+test/samples/.cleanup.log
+*.log
+.DS_Store
+Thumbs.db
+
+# 编辑器
+.idea/
+.vscode/
+*.swp
+
+# 构建缓存
+*.tsbuildinfo
+
+# 记忆系统内部数据（不随仓库发布）
+.mnemon/

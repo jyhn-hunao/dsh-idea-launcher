@@ -1,0 +1,69 @@
+{
+  "name": "dsh-idea-launcher",
+  "version": "0.1.0",
+  "description": "在 DeepSeek Harness 里直接读取 IDEA 运行配置，启动 Java / Spring Boot / Vue 项目并查看彩色日志。",
+  "author": "静音胡闹",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "intellij",
+    "idea",
+    "run-configuration",
+    "spring-boot",
+    "vue",
+    "launcher"
+  ],
+  "homepage": "https://gitee.com/ydcy_studio/dsh-idea-launcher",
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitee.com/ydcy_studio/dsh-idea-launcher.git"
+  },
+  "bugs": {
+    "url": "https://gitee.com/ydcy_studio/dsh-idea-launcher/issues"
+  },
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js"
+  },
+  "files": [
+    "lib",
+    "cordis.patch.yml"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    }
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "node --test --experimental-strip-types test/*.test.ts",
+    "prepublishOnly": "npm run build && npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^4.4.0"
+  },
+  "devDependencies": {
+    "@esbuild/win32-x64": "0.23.1",
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.7",
+    "esbuild": "0.23.1",
+    "typescript": "^5.5.4"
+  }
+}

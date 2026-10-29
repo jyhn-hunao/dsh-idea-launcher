@@ -48,15 +48,15 @@ git clone https://github.com/jyhn-hunao/dsh-idea-launcher.git
 plugin_manager({ action: "install_bundle", target: "<本仓库绝对路径>" })
 ```
 
-### 方式三：npm（暂未发布）
+### 方式三：npm
 
-npm 包名 `dsh-idea-launcher` 已确认为空闲，但发布受 npm 的 2FA 策略限制（账号无法提供 bypass-2fa 或验证码），**当前不使用该渠道**。若日后发布，可用：
+包已发布到 npm（`dsh-idea-launcher`，`latest` 跟随最新版本）：
 
 ```sh
 dsh plugin --profile web add dsh-idea-launcher@latest
 ```
 
-在此之前请用方式一 / 方式二。
+> 版本说明：npm 上的 `0.1.0` 是最早的可用版本；`0.1.1`（按项目 SDK 选 JDK）与 `0.1.2`（中文乱码修复）**以仓库 / GitHub 为准**，若 npm 版本滞后，请用方式一或方式二装到最新。
 
 装完**硬刷新浏览器**（Ctrl/Cmd+Shift+R）。Host 半改动需要重载插件；只改 Client 半刷新页面即可。
 

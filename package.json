@@ -1,6 +1,6 @@
 {
   "name": "dsh-idea-launcher",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "在 DeepSeek Harness 里直接读取 IDEA 运行配置，启动 Java / Spring Boot / Vue 项目并查看彩色日志。",
   "author": "静音胡闹",
   "license": "MIT",
@@ -57,7 +57,8 @@
     "prepublishOnly": "npm run build && npm run typecheck && npm test"
   },
   "dependencies": {
-    "fast-xml-parser": "^4.4.0"
+    "fast-xml-parser": "^4.4.0",
+    "iconv-lite": "^0.7.3"
   },
   "devDependencies": {
     "@esbuild/win32-x64": "0.23.1",

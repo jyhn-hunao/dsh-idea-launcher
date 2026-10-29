@@ -70,6 +70,7 @@ export function buildTerminalArgv(
   return [shell ?? '/bin/bash', '-c', command]
 }
 
+
 export class ProcessDriver {
   private exit: ProcessExit | undefined
   private terminated = false
@@ -93,7 +94,7 @@ export class ProcessDriver {
     }
     if (argv.length === 0) throw new Error('start 需要 command 或非空 argv')
 
-    // 2. 可执行文件解析：provider 的 spawnTerminal 要求可执行的绝对路径（不做 PATH 查找），
+    // 3. 可执行文件解析：provider 的 spawnTerminal 要求可执行的绝对路径（不做 PATH 查找），
     //    所以裸命令名必须先 resolveExecutable，否则会得到 "File not found"
     const env = { ...cleanEnv(process.env), ...options.env }
     // PTY 就是终端：补一个 TERM，让 Maven / Spring Boot 的 ANSI 检测走"支持颜色"分支

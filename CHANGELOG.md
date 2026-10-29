@@ -2,6 +2,15 @@
 
 本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.2] - 2026-10-29
+
+### 修复
+
+- **日志中文乱码**：Windows 的 PTY 固定按 CP936(GBK) 解释子进程字节，而 Spring Boot（默认控制台字符集 UTF-8）、npm/Vite 等会主动写 UTF-8，日志里就成了「UTF-8 被当 GBK 解」的乱码。
+  - 新增 `src/runtime/encoding-fix.ts`：入库前把文本按 GBK 编回字节再严格按 UTF-8 解码——真乱码能还原，正常中文（GBK 编码后再按 UTF-8 解码必然失败）与纯英文原样保留，含 `U+FFFD` 的文本不再二次加工；
+  - 实测 `chcp 65001` 在 ConPTY 下会清屏丢字，因此不走改代码页路线，也不强推 JVM UTF-8（那会让 JVM 自己的中文报错变乱码）；
+  - 产物注入 `createRequire`（`iconv-lite` 内部 `require('buffer')` 需要），新增依赖 `iconv-lite`。
+
 ## [0.1.1] - 2026-10-29
 
 ### 修复

@@ -22,6 +22,8 @@ await rm(outDir, { recursive: true, force: true })
 await mkdir(outDir, { recursive: true })
 
 // 2. Host 半：src/index.ts → lib/index.js，ESM、node 平台、依赖内联
+//    banner 注入 createRequire：某些 CJS 依赖（iconv-lite）内部会 require('buffer')，
+//    纯 ESM 产物里没有 require，会报 "Dynamic require of buffer is not supported"。
 await build({
   entryPoints: [join(root, 'src/index.ts')],
   outfile: join(outDir, 'index.js'),
@@ -31,6 +33,9 @@ await build({
   target: 'node20',
   sourcemap: false,
   logLevel: 'info',
+  banner: {
+    js: "import { createRequire as __createRequire } from 'node:module';\nconst require = __createRequire(import.meta.url);",
+  },
 })
 
 // 3. Client 半：src/client.ts → 临时 CJS 产物，react 走 loader 的 require 注入

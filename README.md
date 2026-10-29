@@ -23,19 +23,39 @@
 
 ## 安装
 
-插件按本仓库目录安装（`lib/` 已随仓库提交，克隆后无需构建即可用）：
+> 当前发布渠道是 **Gitee 仓库**（npm 包名 `dsh-idea-launcher` 已确认为空闲，待发布）。`lib/` 构建产物已随仓库提交，**克隆后无需构建**。
+
+### 方式一：让 DSH 自己装（推荐）
+
+把下面这段提示词发给任意一个 DSH 会话即可：
+
+```text
+帮我安装 dsh-idea-launcher 插件（在 Harness 里读 IDEA 运行配置、启动项目并看彩色日志）：
+1. 把 https://gitee.com/ydcy_studio/dsh-idea-launcher.git 克隆到一个固定目录，例如 ~/dsh-plugins/dsh-idea-launcher
+2. 用 plugin_manager({ action: "install_bundle", target: "<克隆后的绝对路径>" }) 安装
+3. 要求返回 application=applied；失败就把错误原文贴给我，不要自己改插件代码
+4. 完成后提醒我刷新页面（Host 半更新需要重载插件，仅 Client 半改动刷新即可）
+```
+
+### 方式二：手动安装
 
 ```bash
 git clone https://gitee.com/ydcy_studio/dsh-idea-launcher.git
 ```
 
-然后在 Harness 里安装 bundle（target 为仓库绝对路径）：
-
 ```text
 plugin_manager({ action: "install_bundle", target: "<本仓库绝对路径>" })
 ```
 
-安装后刷新页面：顶部右侧会出现运行控件。Host 半改动需要重载插件；只改 Client 半刷新页面即可。
+### 方式三：npm（待发布）
+
+包发布到 npm 后可直接：
+
+```sh
+dsh plugin --profile web add dsh-idea-launcher@latest
+```
+
+装完**硬刷新浏览器**（Ctrl/Cmd+Shift+R）。Host 半改动需要重载插件；只改 Client 半刷新页面即可。
 
 > 依赖：Node ≥ 20；被启动的项目自己需要 java / mvn / npm 等工具链，插件不代装。
 

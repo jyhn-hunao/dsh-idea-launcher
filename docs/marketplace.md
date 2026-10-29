@@ -1,5 +1,8 @@
 # 发布到 DSH 插件市场
 
+> **状态**：已提交 PR [#10303](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin/pull/10303)，等待维护者合并。
+> GitHub 主仓：https://github.com/jyhn-hunao/dsh-idea-launcher （分支 `main`，标签 `v0.1.0`）
+
 市场目录的数据源是 GitHub 仓库 [`awesome-dsh-plugin/awesome-dsh-plugin`](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin)，
 站点 `dshmarket.com` 与 `awesome-dsh-plugin.com` 每天从它生成。
 
@@ -22,13 +25,13 @@
 
 建镜像仓与开 PR 都需要 GitHub 账号。
 
-## 待提交的 YAML（把 `<owner>` 换成你的 GitHub 用户名）
+## 已提交的 YAML（owner = jyhn-hunao）
 
-文件：`data/plugins/<owner>__dsh-idea-launcher.yml`
+文件：`data/plugins/jyhn-hunao__dsh-idea-launcher.yml`
 
 ```yaml
-url: https://github.com/<owner>/dsh-idea-launcher
-name: <owner>/dsh-idea-launcher
+url: https://github.com/jyhn-hunao/dsh-idea-launcher
+name: jyhn-hunao/dsh-idea-launcher
 category: dev
 description:
   en: 'Reads IDEA run configurations and launches Java, Spring Boot and Vue projects inside DeepSeek Harness, with colored logs and a fast java -cp path.'
@@ -56,7 +59,7 @@ git checkout -b add-dsh-idea-launcher
 git add data/plugins/<owner>__dsh-idea-launcher.yml
 git commit -m "Add <owner>/dsh-idea-launcher"
 git push origin add-dsh-idea-launcher
-# 4. 在 GitHub 开 PR（标题：Add <owner>/dsh-idea-launcher）
+# 4. 在 GitHub 开 PR（标题：Add jyhn-hunao/dsh-idea-launcher）
 ```
 
 ### B. 给我 GitHub 个人访问令牌（PAT）

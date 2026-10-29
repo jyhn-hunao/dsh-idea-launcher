@@ -30,6 +30,7 @@ export type DiagnosticCode =
   | 'duplicate-config'
   | 'command-assumption'
   | 'overlay-invalid'
+  | 'project-jdk-unresolved'
 
 export interface Diagnostic {
   level: 'error' | 'warn'
@@ -113,4 +114,8 @@ export interface LaunchPlan {
   fastJava?: { moduleRoot: string; mainClass: string; vmParams?: string; programParams?: string }
   /** 展示用：预计走 maven（argv）还是直接 java（fastJava）；Host 失败会回退 maven */
   launchMode?: 'maven' | 'java'
+  /** 项目 SDK 的 JDK 根目录（来自 .idea/misc.xml + IDEA jdk.table.xml） */
+  javaHome?: string
+  /** 项目 SDK 名（如 ms-21），仅用于展示与诊断 */
+  jdkName?: string
 }

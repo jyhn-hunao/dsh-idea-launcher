@@ -2,6 +2,16 @@
 
 本项目遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [0.1.1] - 2026-10-29
+
+### 修复
+
+- **按项目 SDK 启动**：此前快速启动直接用 PATH 上的 `java`，遇到项目使用更高版本 JDK 时启动失败（`UnsupportedClassVersionError: class file version 65.0 ... up to 61.0`，mlw 项目真实踩到）。
+  - 新增 `src/parser/project-jdk.ts`：读 `.idea/misc.xml` 的 `project-jdk-name` / `languageLevel`，再到 IDEA 的 `jdk.table.xml` 解析 `homePath`；
+  - 快速启动改用该 JDK 的 `java`，并为进程设置 `JAVA_HOME` 与 `PATH`（Maven 回退路径同样受用）；
+  - 解析不到时给 `project-jdk-unresolved` 诊断并回退 PATH（不静默）；
+  - 详情浮层显示 `JDK ms-21（D:/java/jdk21）`。
+
 ## [0.1.0] - 2026-10-29
 
 首个可用版本（V1）。在 DeepSeek Harness 里读取 IDEA 运行配置、启动项目、看彩色日志。

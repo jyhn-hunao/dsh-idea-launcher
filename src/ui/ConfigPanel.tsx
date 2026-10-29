@@ -109,6 +109,12 @@ export function ConfigPanel(props: ConfigPanelProps): React.ReactElement {
         >
           <span style={{ wordBreak: 'break-all' }}>{config.plan.display}</span>
           <span style={{ opacity: 0.6, wordBreak: 'break-all' }}>cwd {config.plan.cwd}</span>
+          {config.plan.jdkName ? (
+            <span style={{ opacity: 0.6, wordBreak: 'break-all' }}>
+              JDK {config.plan.jdkName}
+              {config.plan.javaHome ? `（${config.plan.javaHome}）` : ''}
+            </span>
+          ) : null}
         </div>
       ) : config ? (
         <div style={{ opacity: 0.7 }}>{config.type} 配置暂不支持在 V1 启动（Compound 编排在 M6）。</div>

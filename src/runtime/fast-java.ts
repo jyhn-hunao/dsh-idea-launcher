@@ -5,6 +5,7 @@
 // 任何一个前提不满足都返回原因，由调用方决定"回退到 mvn spring-boot:run"（会显式写日志，不静默）。
 import { mkdir, readFile, readdir, stat, writeFile } from 'node:fs/promises'
 import { dirname, join, sep } from 'node:path'
+import { javaExecutable } from '../parser/project-jdk.ts'
 
 export interface FastJavaSpec {
   projectRoot: string
@@ -18,6 +19,8 @@ export interface FastJavaSpec {
   forceCompile?: boolean
   /** 跳过编译（明确知道产物是最新的） */
   skipCompile?: boolean
+  /** 项目 JDK 根目录：用它下面的 java 启动，而不是 PATH 上的 */
+  javaHome?: string
 }
 
 export interface FastJavaState {
@@ -36,7 +39,7 @@ const CLASSES_DIR = ['target', 'classes']
 
 /** java 启动 argv（纯函数，便于单测）。 */
 export function buildJavaArgv(spec: FastJavaSpec, classpath: string): string[] {
-  const argv = ['java']
+  const argv = [spec.javaHome ? javaExecutable(spec.javaHome) : 'java']
   const vm = spec.vmParams?.trim()
   if (vm) argv.push(...vm.split(/\s+/))
   const entries = [join(spec.moduleRoot, ...CLASSES_DIR), classpath].filter((part) => part.length > 0)

@@ -22,6 +22,10 @@ export interface PlanView {
   argv?: string[]
   command?: string
   diagnostics: Diagnostic[]
+  /** 项目 SDK 名（如 ms-21）与 JDK 根目录：来自 .idea/misc.xml + jdk.table.xml */
+  jdkName?: string
+  javaHome?: string
+  launchMode?: 'maven' | 'java'
 }
 
 export interface ConfigView {

@@ -8,6 +8,7 @@
 //   GET  /idea-launcher/api/logs         某实例的合并输出（since 偏移增量）
 // 所有路由都用 ctx.effect 持有 disposer；卸载时先停掉所有实例，避免留孤儿进程。
 import type { IncomingMessage, ServerResponse } from 'node:http'
+import { delimiter, join } from 'node:path'
 import { InstanceRegistry } from './runtime/instance.ts'
 import { ProcessDriver, type SubprocessLike } from './runtime/process.ts'
 import { LogRing } from './runtime/log-ring.ts'
@@ -15,6 +16,7 @@ import { loadIdeaConfigs } from './parser/extract.ts'
 import { readOverlay } from './config/overlay.ts'
 import { resolveProjectRoot, type SessionsLike } from './config/project-root.ts'
 import { mapToLaunchPlan } from './mapper/index.ts'
+import { withProjectJdk } from './mapper/jdk.ts'
 import {
   buildJavaArgv,
   classpathBuildArgv,
@@ -232,14 +234,17 @@ export function apply(ctx: HostContextLike): void {
     const parsed = await loadIdeaConfigs(projectRoot)
     const { overlay, diagnostics: overlayDiagnostics } = await readOverlay(projectRoot)
 
-    const configs = parsed.configs.map((config) => ({
-      name: config.name,
-      type: config.type,
-      origin: config.origin,
-      moduleName: config.moduleName,
-      moduleRoot: config.moduleRoot,
-      plan: mapToLaunchPlan(config, projectRoot, overlay),
-    }))
+    const configs = await Promise.all(
+      parsed.configs.map(async (config) => ({
+        name: config.name,
+        type: config.type,
+        origin: config.origin,
+        moduleName: config.moduleName,
+        moduleRoot: config.moduleRoot,
+        // 补项目 JDK：IDEA 配置本身不带 JDK，避免用 PATH 上错误的 java（mlw 的 UnsupportedClassVersionError）
+        plan: await withProjectJdk(mapToLaunchPlan(config, projectRoot, overlay), projectRoot),
+      })),
+    )
 
     ok(res, {
       ok: true,
@@ -299,6 +304,7 @@ export function apply(ctx: HostContextLike): void {
       try {
         argv = await prepareFastJava(subprocess, ring, {
           projectRoot: launch.projectRoot,
+          javaHome: launch.plan?.javaHome,
           moduleRoot: fast.moduleRoot,
           mainClass: fast.mainClass,
           vmParams: fast.vmParams,
@@ -428,13 +434,13 @@ export function apply(ctx: HostContextLike): void {
       const config = parsed.configs.find((c) => c.name === configName)
       if (!config) throw new Error(`项目里没有名为 "${configName}" 的运行配置`)
       const { overlay } = await readOverlay(projectRoot)
-      const plan = mapToLaunchPlan(config, projectRoot, overlay)
+      const plan = await withProjectJdk(mapToLaunchPlan(config, projectRoot, overlay), projectRoot)
       if (!plan) throw new Error(`配置 "${configName}" 是 ${config.type} 类型，M6 才支持编排`)
       return {
         argv: plan.argv,
         command: plan.command,
         cwd: plan.cwd,
-        env: plan.env,
+        env: withJdkEnv(plan.env, plan.javaHome),
         configName: config.name,
         configType: config.type,
         plan,
@@ -564,6 +570,17 @@ async function readJson(req: IncomingMessage): Promise<Record<string, unknown>> 
   const text = Buffer.concat(chunks).toString('utf8')
   const parsed: unknown = JSON.parse(text)
   return typeof parsed === 'object' && parsed !== null ? (parsed as Record<string, unknown>) : {}
+}
+
+/** 项目 JDK 存在时，把 JAVA_HOME 与 PATH 指向它：Maven 与直启 java 都受用。 */
+function withJdkEnv(
+  env: Record<string, string> | undefined,
+  javaHome: string | undefined,
+): Record<string, string> | undefined {
+  if (!javaHome) return env
+  const bin = join(javaHome, 'bin')
+  const path = env?.PATH ?? process.env.PATH ?? ''
+  return { ...env, JAVA_HOME: javaHome, PATH: `${bin}${delimiter}${path}` }
 }
 
 function isStringRecord(value: unknown): value is Record<string, string> {
